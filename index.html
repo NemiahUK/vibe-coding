@@ -192,14 +192,23 @@
           </li>
           <li>
             <h3>Write the implementation plan</h3>
-            <p>Take the lead and write <code>IMPLEMENTATION_PLAN.md</code>. Break the work into manageable phases. For each phase, explain what the user will be able to do when it’s finished and how you’ll test it. Include deployment and give the user a short summary in chat.</p>
+            <p>Take the lead and write <code>IMPLEMENTATION_PLAN.md</code>. Break the work into manageable phases. For each phase, explain what the user will be able to do when it’s finished and how you’ll test it. Plan for the user to review each phase in their browser at a staging URL. Include a release step after their final approval, and give them a short summary in chat.</p>
           </li>
           <li>
-            <h3>Build, test and deploy</h3>
-            <p>Once the three documents are in place and reflect the agreed direction, carry out the plan. Build light and dark themes that automatically follow the device’s system theme.</p>
+            <h3>Build and test on staging</h3>
+            <p>Once the three documents are in place and reflect the agreed direction, create a <code>staging</code> branch and publish it to a stable staging URL. Configure updates to that branch to deploy there. Give staging its own database, sign-in settings and credentials. Keep it behind staff login and label it clearly as staging.</p>
+            <p>Explain staging to the user in plain English: “This is your sandbox. Open this link to try the app with fictional customers. You can add or edit records here without affecting real customers. This is where you’ll review and approve changes before they go live.” Create the user’s staging app account, send a sign-in invitation for that environment, and confirm they can get in. They should be able to review everything in a browser without installing development tools or running commands.</p>
+            <p>Create and document scripts for setting up an empty database, applying versioned migrations, loading fictional demo records, and resetting and reseeding staging. Make seeding repeatable without duplicating records. Keep the user’s staging login working after a reset. Have demo and reset scripts target staging by default and refuse to run against live in normal use. On live, apply the reviewed migrations and any setup data the app needs to work.</p>
+            <p>Build light and dark themes that automatically follow the device’s system theme.</p>
             <p>Use Vitest and React Testing Library to check individual features. Use Playwright to test the main tasks from the brief in a browser. Run the relevant tests after each phase.</p>
             <p>Use test accounts and fictional customer records in a separate test environment. For a private CRM, verify that approved staff can complete their work and that the database denies access to customer records when someone is signed out. Test the main task at phone and desktop sizes and verify that the app follows changes to the system theme.</p>
-            <p>Run the full suite before deployment and fix failures. Deploy the app, verify that the live version works, and share its URL with a short walkthrough of the user’s first task. Tell the user what you tested, what passed and anything you couldn’t verify.</p>
+            <p>After each phase, share the staging link and a short task the user can try. Before release, run the full suite, fix failures, and tell the user what passed and anything you couldn’t verify. Ask them to try the finished app on staging and explicitly approve that version for live use. Keep development on staging until they give that approval.</p>
+          </li>
+          <li>
+            <h3>Launch the approved version</h3>
+            <p>Only after the user confirms the app is ready, create the <code>live</code> branch from the exact version they approved on staging. Publish the live environment from that branch. Connect it to its own database and sign-in service, apply the tested migrations, and keep fictional staging records out of live. For later releases, show changes on staging and promote the approved version to <code>live</code>.</p>
+            <p>Create the user’s live app account and invite them to sign in at the live URL. Ask whether they want a custom address for the live app, such as <code>crm.example.com</code>. If they do, guide them through connecting it one step at a time. Show them the exact DNS record from the hosting service and where to enter it at their domain provider. Update the live sign-in and invitation links, then verify HTTPS and sign-in at the custom address. If they prefer the hosting service’s address, use that.</p>
+            <p>Give the user both links, labelled <strong>Staging — try changes</strong> and <strong>Live — real work</strong>. Confirm they can sign in to both, verify the live app works, and walk them through their first task.</p>
           </li>
         </ol>
       </section>
